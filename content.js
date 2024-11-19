@@ -8,6 +8,7 @@ browser.runtime.onMessage.addListener(async (message) => {
   }
 });
 
+browser.runtime.onMessage.addListener();
 function searchEmail(email) {
   let searchField = document.querySelector("#searchTerm");
   let searchButton = document.querySelector("#cs-agent-search-customer");
@@ -21,15 +22,18 @@ function searchEmail(email) {
 }
 
 function checkForMatch(email) {
-  let customerListContainer = document.querySelector("#customer-search-list");
+  let customerListContainer = document.querySelector(".customer_email");
+  let selectCustomerbtn = document.querySelector(".customer-record-item");
 
-  if (customerListContainer) {
-    let containerText = customerListContainer.innerText.trim();
+  if (customerListContainer != null) {
+    let containerText = customerListContainer.textContent.trim();
 
     if (containerText === email) {
       console.log("They match!");
-      browser.runtime.sendMessage({ action: "result", match: true });
-    } else if (containerText.includes("No records found")) {
+      selectCustomerbtn.click();
+
+      //   browser.runtime.sendMessage({ action: "result", match: true });
+    } else {
       console.log("Not a match");
       browser.runtime.sendMessage({ action: "result", match: false });
     }
