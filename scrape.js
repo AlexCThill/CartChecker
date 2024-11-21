@@ -14,14 +14,13 @@ function scraperDate() {
 
     console.log("scraped modDate:", modDate);
 
-    browsers.runtime
-      .sendMessage({
-        action: "addModDate",
-        modDate: modDate,
-      })
-      .then(() => {
-        window.location.href = "https://www.lumens.com/csc/search-customer";
-      });
+    browser.runtime.sendMessage({
+      action: "addModDate",
+      modDate: modDate,
+    });
+
+    console.log("Going back in history...");
+    history.back();
   } else {
     console.log("Mod date element not found");
   }
