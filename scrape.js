@@ -13,14 +13,13 @@ function scraperDate() {
     let modDate = modDateElement.innerText.trim();
 
     console.log("scraped modDate:", modDate);
-
+    history.back();
     browser.runtime.sendMessage({
       action: "addModDate",
       modDate: modDate,
     });
 
     console.log("Going back in history...");
-    history.back();
   } else {
     console.log("Mod date element not found");
   }

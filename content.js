@@ -43,8 +43,11 @@ function checkForMatch(email) {
         .sendMessage({ action: "result", match: true })
         .then(selectCustomerbtn.click());
     } else {
-      console.log("Not a match");
-      browser.runtime.sendMessage({ action: "result", match: false });
+      console.log("Not a match, stopping everything");
+      // browser.runtime.sendMessage({ action: "result", match: false });
     }
+  } else {
+    console.log("Not a match");
+    browser.runtime.sendMessage({ action: "result", match: false });
   }
 }

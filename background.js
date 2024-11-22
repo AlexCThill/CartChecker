@@ -1,7 +1,30 @@
 let customerEmailsToSearch = [
-  // "athill@gmail.com",
   "Athill@lumens.com",
-  "athilll@yahoo.com",
+  "Alex1@gmail.com",
+  "Alex2@gmail.com",
+  "Athill@lumens.com",
+  "Alex3@gmail.com",
+  "Athill@lumens.com",
+  "Alex4@gmail.com",
+  "Athill@lumens.com",
+  "Alex5@gmail.com",
+  "Athill@lumens.com",
+  "Alex6@gmail.com",
+  "Athill@lumens.com",
+  "Alex7@gmail.com",
+  "Alex8@gmail.com",
+  "Alex9@gmail.com",
+  "Alex10@gmail.com",
+  // "Alex11@gmail.com",
+  // "Alex12@gmail.com",
+  // "Alex13@gmail.com",
+  // "Alex14@gmail.com",
+  // "Alex15@gmail.com",
+  // "Alex16@gmail.com",
+  // "Alex17@gmail.com",
+  // "Alex18@gmail.com",
+  // "Alex19@gmail.com",
+  // "Alex20@gmail.com",
 ];
 
 let matchingCustomerEmails = [];
@@ -16,7 +39,6 @@ browser.browserAction.onClicked.addListener((tab) => {
 });
 
 function startSearch(tabId) {
-  // currentEmailIndex = 0;
   browser.tabs.sendMessage(tabId, {
     action: "searchEmail",
     email: customerEmailsToSearch[currentEmailIndex],
@@ -29,7 +51,6 @@ browser.runtime.onMessage.addListener((message, sender) => {
   if (message.action === "result") {
     if (message.match) {
       matchingCustomerEmails.push(customerEmailsToSearch[currentEmailIndex]);
-      // currentEmailIndex++;
       browser.runtime
         .sendMessage({ action: "scrapeDate" })
         .then((response) => {
@@ -43,6 +64,7 @@ browser.runtime.onMessage.addListener((message, sender) => {
           console.error("Error sending scrapeDate message:", error);
         });
     } else {
+      console.log("It broke");
     }
 
     // Target URL
@@ -67,8 +89,14 @@ browser.runtime.onMessage.addListener((message, sender) => {
         email: customerEmailsToSearch[currentEmailIndex],
       });
     } else {
-      displayResults(sender.tab.id);
+      displayResults("It broke in this spot:3", sender.tab.id);
     }
+  } else {
+    console.log("IT GOT TO THE ELSE POINT AND WILL NOW STOP");
+    // currentEmailIndex++;
+    // setTimeout(() => {
+    //   startSearch(sender.tab.id);
+    // }, 2000);
   }
 });
 
@@ -80,14 +108,16 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
       scrapedDates.push(message.modDate);
       console.log("Updated scrapedDates array:", scrapedDates);
       currentEmailIndex++;
-      console.log(currentEmailIndex);
-      startSearch(sender.tab.id);
+      console.log("Current email index:", currentEmailIndex);
 
-      if (currentEmailIndex < customerEmailsToSearch.length) {
-        startSearch(sender.tab.id);
-      } else {
-        displayResults(sender.tab.id);
-      }
+      // Time out to get page time to reload after back button
+      setTimeout(() => {
+        if (currentEmailIndex < customerEmailsToSearch.length) {
+          startSearch(sender.tab.id);
+        } else {
+          displayResults(sender.tab.id);
+        }
+      }, 2000); // 1000ms = 1 second
 
       // Send a success response
       sendResponse({ success: true, message: "modDate added successfully" });
