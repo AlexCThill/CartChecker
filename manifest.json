@@ -22,7 +22,7 @@
         "https://www.lumens.com/csc/search-customer/*",
         "https://www.lumens.com/csc/view-customer/*"
       ],
-      "js": ["content.js", "scrape.js"]
+      "js": ["content.js", "scrape.js", "resultsModal.js"]
     }
   ]
 }
