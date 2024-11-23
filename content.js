@@ -20,9 +20,12 @@ function searchEmail(email) {
     // Periodically check for the customer list container
     const intervalId = setInterval(() => {
       const customerListContainer = document.querySelector(".customer_email");
-      if (customerListContainer) {
+      const emptyRow = document.querySelector('.dataTables_empty');
+      if (customerListContainer || emptyRow) {
         clearInterval(intervalId); // Stop checking once the container is found
         checkForMatch(email); // Trigger the function to check for matches
+      } else {
+        console.log('Search result elements not found. Keep waiting for load..');
       }
     }, 3000);
   } else {
