@@ -8,19 +8,29 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 function scraperDate() {
   let modDateElement = document.querySelector(".basketModificationDate");
+  let creationDateElement = document.querySelector(".basketCreationDate");
+  let basketTotalElement = document.querySelector(".basketTotal");
 
-  if (modDateElement) {
-    let modDate = modDateElement.innerText.trim();
+  let modDate = modDateElement ? modDateElement.innerText.trim() : null;
+  let creationDate = creationDateElement
+    ? creationDateElement.innerText.trim()
+    : null;
+  let basketTotal = basketTotalElement
+    ? basketTotalElement.innerText.trim()
+    : null;
 
-    console.log("scraped modDate:", modDate);
-    history.back();
-    browser.runtime.sendMessage({
-      action: "addModDate",
-      modDate: modDate,
-    });
+  console.log("scraped modDate:", modDate);
+  console.log("scraped creationDate:", creationDate);
+  console.log("scraped basketTotal:", basketTotal);
 
-    console.log("Going back in history...");
-  } else {
-    console.log("Mod date element not found");
-  }
+  history.back();
+
+  browser.runtime.sendMessage({
+    action: "addScrapedData",
+    modDate: modDate,
+    creationDate: creationDate,
+    basketTotal: basketTotal,
+  });
+
+  console.log("Going back in history...");
 }

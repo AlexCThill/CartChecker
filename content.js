@@ -20,14 +20,16 @@ function searchEmail(email) {
     // Periodically check for the customer list container
     const intervalId = setInterval(() => {
       const customerListContainer = document.querySelector(".customer_email");
-      const emptyRow = document.querySelector('.dataTables_empty');
+      const emptyRow = document.querySelector(".dataTables_empty");
       if (customerListContainer || emptyRow) {
         clearInterval(intervalId); // Stop checking once the container is found
         checkForMatch(email); // Trigger the function to check for matches
       } else {
-        console.log('Search result elements not found. Keep waiting for load..');
+        console.log(
+          "Search result elements not found. Keep waiting for load.."
+        );
       }
-    }, 3000);
+    }, 2000);
   } else {
     console.log("Search field or button not found on the page.");
   }
@@ -35,22 +37,34 @@ function searchEmail(email) {
 
 function checkForMatch(email) {
   let customerListContainer = document.querySelector(".customer_email");
-  let selectCustomerbtn = document.querySelector(".customer-record-item");
+  let errorContainer = document.querySelector(".error-message"); // Replace with the actual error container selector
 
-  if (customerListContainer != null) {
-    let containerText = customerListContainer.textContent.trim();
+  if (customerListContainer) {
+    // Cart exists
+    let containerText = customerListContainer.textContent.trim().toLowerCase();
+    let normalizedEmail = email.toLowerCase();
 
-    if (containerText === email) {
+    if (containerText === normalizedEmail) {
       console.log("They match!");
       browser.runtime
         .sendMessage({ action: "result", match: true })
-        .then(selectCustomerbtn.click());
+        .then(() => {
+          let selectCustomerbtn = document.querySelector(
+            ".customer-record-item"
+          );
+          selectCustomerbtn && selectCustomerbtn.click();
+        });
     } else {
       console.log("Not a match, stopping everything");
-      // browser.runtime.sendMessage({ action: "result", match: false });
+      browser.runtime.sendMessage({ action: "result", match: false });
     }
+  } else if (errorContainer) {
+    // Explicitly handle the "No records found" case
+    console.log("Error: No records found for the given email.");
+    browser.runtime.sendMessage({ action: "result", match: false });
   } else {
-    console.log("Not a match");
+    // Default case for safety
+    console.log("No match and no error container detected.");
     browser.runtime.sendMessage({ action: "result", match: false });
   }
 }
